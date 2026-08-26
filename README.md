@@ -1,5 +1,10 @@
 # Agent Skills Eval Playbook
 
+![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+![eval harness: stdlib only](https://img.shields.io/badge/eval%20harness-stdlib%20only-green.svg)
+![Works with Claude Code](https://img.shields.io/badge/works%20with-Claude%20Code-blueviolet.svg)
+
 A small, self-contained repo that teaches engineers how to write **Agent
 Skills** that don't bloat an agent's context window, and how to **evaluate
 and benchmark** those skills with quantifiable, deterministic metrics — no
@@ -37,7 +42,6 @@ convention (`SKILL.md` + `scripts/` + `references/` + `assets/`).
 | `.agents/skills/python-code-review/` | One real, working example skill |
 | `app/` | A toy Flask wind-turbine sensor monitoring service with intentional style issues, used as the skill's target |
 | `.evals/` | A from-scratch benchmark harness: trigger precision/recall, a paired with-skill/baseline uplift score (raw + normalized gain), pass^k reliability, and a `--critique` mode for qualitative SKILL.md review |
-| `.github/workflows/skill-eval.yml` | Runs the benchmark in CI on every change to the skill |
 
 ## Quickstart
 
@@ -113,22 +117,6 @@ minutes, and small enough that the benchmark's numbers are easy to trust.
   did the agent remove," counted by a script, not judged by another LLM call.
 - **Sandbox isolation.** Every eval run happens in its own `git worktree` so
   a bad agent run can never touch your real working directory or main branch.
-
-## Publishing this repo
-
-This repo already has a local git history. To push it to GitHub:
-
-```bash
-gh repo create agent-skills-eval-playbook --public --source=. --push
-# or, without the gh CLI:
-git remote add origin git@github.com:<you>/agent-skills-eval-playbook.git
-git push -u origin main
-```
-
-To get the CI workflow (`.github/workflows/skill-eval.yml`) actually running,
-add an `ANTHROPIC_API_KEY` secret to the repo (Settings → Secrets and
-variables → Actions) — without it, the workflow will fail at the benchmark
-step, not silently skip it.
 
 ## License
 
