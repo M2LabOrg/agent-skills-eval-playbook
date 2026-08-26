@@ -3,7 +3,7 @@
 ![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![eval harness: stdlib only](https://img.shields.io/badge/eval%20harness-stdlib%20only-green.svg)
-![Works with Claude Code](https://img.shields.io/badge/works%20with-Claude%20Code-blueviolet.svg)
+![Works with Claude, Copilot, Cursor, and more](https://img.shields.io/badge/works%20with-Claude%20%C2%B7%20Copilot%20%C2%B7%20Cursor%20%C2%B7%20any%20agent-blueviolet.svg)
 
 A small, self-contained repo that teaches engineers how to write **Agent
 Skills** that don't bloat an agent's context window, and how to **evaluate
@@ -11,9 +11,11 @@ and benchmark** those skills with quantifiable, deterministic metrics — no
 third-party eval frameworks, just Python's standard library, git, and the
 `claude` CLI.
 
-It targets engineers using Claude (Claude Code / Claude in VS Code) and
-Copilot-style agents that support the open `agentskills.io` folder
-convention (`SKILL.md` + `scripts/` + `references/` + `assets/`).
+It targets engineers using any coding agent that supports the open
+`agentskills.io` folder convention (`SKILL.md` + `scripts/` +
+`references/` + `assets/`): Claude Code, Claude in VS Code, GitHub Copilot,
+Cursor, Windsurf, or any other agent you want to test against the benchmark
+harness in `.evals/`.
 
 ## What you'll learn
 
@@ -29,10 +31,14 @@ convention (`SKILL.md` + `scripts/` + `references/` + `assets/`).
 ## Prerequisites
 
 - Python 3.10+ and `git`
-- Node.js + npm, to install the Claude Code CLI: `npm i -g @anthropic-ai/claude-code`
-- The `claude` CLI authenticated (`claude` once, interactively, to log in) —
-  only needed for the "try the skill" and benchmark steps below, not for
-  reading the docs
+- Any coding agent installed in your IDE (Claude Code, Copilot, Cursor, etc.)
+  to try the skill by hand — see your agent's own setup docs
+- For the **benchmark harness** specifically: the Claude Code CLI
+  (`npm i -g @anthropic-ai/claude-code`, then `claude` once to authenticate)
+  — the docs and skill files are fully readable without it; only
+  `.evals/run_evals.py` needs a `claude` binary on PATH to drive the
+  headless benchmark loop. You can swap in a different agent's CLI by
+  editing the `claude_run()` function in `run_evals.py`.
 
 ## What's here
 
@@ -41,7 +47,8 @@ convention (`SKILL.md` + `scripts/` + `references/` + `assets/`).
 | `docs/` | The lessons — read these in order |
 | `.agents/skills/python-code-review/` | One real, working example skill |
 | `app/` | A toy Flask wind-turbine sensor monitoring service with intentional style issues, used as the skill's target |
-| `.evals/` | A from-scratch benchmark harness: trigger precision/recall, a paired with-skill/baseline uplift score (raw + normalized gain), pass^k reliability, and a `--critique` mode for qualitative SKILL.md review |
+| `.evals/run_evals.py` | From-scratch benchmark harness: trigger precision/recall, paired with-skill/baseline uplift score (raw + normalized gain), pass^k reliability, and a `--critique` mode for qualitative SKILL.md review |
+| `.evals/sandbox.sh` | Manual `git worktree` sandbox helper — spin up and tear down an isolated copy of the repo for a single agent run, without touching your real working tree |
 
 ## Quickstart
 
@@ -57,7 +64,13 @@ python app/app.py
 # Try the skill by hand (requires the Claude Code CLI, `npm i -g @anthropic-ai/claude-code`)
 claude -p "Review app/turbine_monitor.py against our python style guide and fix the issues"
 
-# Run the deterministic benchmark
+# Try the sandbox by hand — creates an isolated git worktree, runs your
+# agent inside it, then tears it down. Your real working tree is untouched.
+bash .evals/sandbox.sh up my-test
+# cd .evals/sandbox-my-test && <run your agent here> && cd -
+bash .evals/sandbox.sh down my-test
+
+# Run the deterministic benchmark (automates the worktree sandbox per case)
 python .evals/run_evals.py
 ```
 
