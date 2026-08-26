@@ -72,20 +72,27 @@ def remove_sandbox(sandbox: Path) -> None:
 
 def claude_run(prompt: str, cwd: Path, allowed_tools: str) -> dict:
     """Invoke `claude -p` headlessly and return its parsed JSON result.
-    Raises RuntimeError with stderr on failure so callers fail loudly."""
+
+    The CLI exits 1 when it hits --max-turns with tool calls still pending
+    (is_error:true, stop_reason:tool_use) — the JSON response is still valid
+    and contains the full turn history, so we parse it regardless of exit code
+    and only raise when stdout is genuinely unparseable."""
     cmd = [
         "claude", "-p", prompt,
         "--output-format", "json",
         "--allowedTools", allowed_tools,
-        "--max-turns", "10",
+        "--max-turns", "20",
     ]
     result = run(cmd, cwd=cwd)
-    if result.returncode != 0:
-        raise RuntimeError(f"claude -p failed (exit {result.returncode}): {result.stderr[:500]}")
     try:
         return json.loads(result.stdout)
     except json.JSONDecodeError:
-        # Fall back to raw text so a trigger check can still string-match it.
+        if result.returncode != 0:
+            raise RuntimeError(
+                f"claude -p failed (exit {result.returncode}): {result.stderr[:500]}"
+            )
+        # Non-zero but unparseable stdout — fall back to raw text so a trigger
+        # check can still string-match it.
         return {"result": result.stdout}
 
 
