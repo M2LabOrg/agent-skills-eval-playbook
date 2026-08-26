@@ -111,8 +111,5 @@ shouldn't change at all between runs unless the toy app or prompts changed
 ## Where this runs
 
 Every run happens inside an isolated `git worktree`, never your real working
-tree — see [`05-sandbox-worktrees.md`](05-sandbox-worktrees.md). The same
-script also runs in CI: [`.github/workflows/skill-eval.yml`](../.github/workflows/skill-eval.yml)
-triggers on any pull request touching `.agents/skills/**`, so a skill change
-gets the same benchmark a human would run locally, automatically, before
-merge.
+tree — see [`05-sandbox-worktrees.md`](05-sandbox-worktrees.md) for what
+worktrees are and why the benchmark uses them.
