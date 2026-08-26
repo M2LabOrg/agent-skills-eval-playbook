@@ -47,7 +47,8 @@ harness in `.evals/`.
 | `docs/` | The lessons — read these in order |
 | `.agents/skills/python-code-review/` | One real, working example skill |
 | `app/` | A toy Flask wind-turbine sensor monitoring service with intentional style issues, used as the skill's target |
-| `.evals/` | A from-scratch benchmark harness: trigger precision/recall, a paired with-skill/baseline uplift score (raw + normalized gain), pass^k reliability, and a `--critique` mode for qualitative SKILL.md review |
+| `.evals/run_evals.py` | From-scratch benchmark harness: trigger precision/recall, paired with-skill/baseline uplift score (raw + normalized gain), pass^k reliability, and a `--critique` mode for qualitative SKILL.md review |
+| `.evals/sandbox.sh` | Manual `git worktree` sandbox helper — spin up and tear down an isolated copy of the repo for a single agent run, without touching your real working tree |
 
 ## Quickstart
 
@@ -63,7 +64,13 @@ python app/app.py
 # Try the skill by hand (requires the Claude Code CLI, `npm i -g @anthropic-ai/claude-code`)
 claude -p "Review app/turbine_monitor.py against our python style guide and fix the issues"
 
-# Run the deterministic benchmark
+# Try the sandbox by hand — creates an isolated git worktree, runs your
+# agent inside it, then tears it down. Your real working tree is untouched.
+bash .evals/sandbox.sh up my-test
+# cd .evals/sandbox-my-test && <run your agent here> && cd -
+bash .evals/sandbox.sh down my-test
+
+# Run the deterministic benchmark (automates the worktree sandbox per case)
 python .evals/run_evals.py
 ```
 
