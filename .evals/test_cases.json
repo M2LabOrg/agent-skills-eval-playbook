@@ -1,0 +1,51 @@
+{
+  "trigger_cases": [
+    {
+      "id": "tp1",
+      "prompt": "Can you review app/turbine_monitor.py against our python style guide before I open a PR?",
+      "should_trigger": true
+    },
+    {
+      "id": "tp2",
+      "prompt": "Lint and clean up app/app.py",
+      "should_trigger": true
+    },
+    {
+      "id": "tp3",
+      "prompt": "Review the Python code in app/ for missing docstrings and type hints",
+      "should_trigger": true
+    },
+    {
+      "id": "tn1",
+      "prompt": "Explain what Flask's request.get_json() does",
+      "should_trigger": false
+    },
+    {
+      "id": "tn2",
+      "prompt": "Design the database schema for storing turbine sensor readings long-term",
+      "should_trigger": false
+    },
+    {
+      "id": "tn3",
+      "prompt": "Review our team's Vue component naming conventions",
+      "should_trigger": false
+    },
+    {
+      "id": "tn4",
+      "prompt": "Is the rpm_limit threshold of 18.0 physically reasonable for a 2MW turbine?",
+      "should_trigger": false
+    }
+  ],
+  "quality_cases": [
+    {
+      "id": "q1",
+      "prompt": "Review app/turbine_monitor.py against our python style guide and fix the issues.",
+      "target_file": "app/turbine_monitor.py"
+    },
+    {
+      "id": "q2",
+      "prompt": "Review app/app.py against our python style guide and fix the issues.",
+      "target_file": "app/app.py"
+    }
+  ]
+}
